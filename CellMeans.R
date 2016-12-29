@@ -27,14 +27,10 @@ CellMeans = function(x,values,cat,p=0.05) {
         cats = cats[-1]
         
         for (j in cats){
-          PooledVar = (var(x[values][x[cat]==i]) + var(x[values][x[cat]==j]))/2
-          PooledEst = (PooledVar/ length(x[values][x[cat]==i])) + (PooledVar/ length(x[values][x[cat]==j]))
           
-          tji = (mean(x[values][x[cat]==i])-mean(x[values][x[cat]==j]))/sqrt(PooledEst)
-          pvalue_ji =2*pt(tji,df=length(x[values][x[cat]==i])+length(x[values][x[cat]==j])-2)
-          pvalues = c(pvalues, pvalue_ji)
+          pvalues = c(pvalues, t.test(x[values][x[cat]==i],x[values][x[cat]==j])$p.value)
           catA=c(catA,i)
-          catB=c(catB,i)
+          catB=c(catB,j)
 
         }
       }
@@ -45,10 +41,10 @@ CellMeans = function(x,values,cat,p=0.05) {
     return(NULL)
 }
 
-#Example
-# cat = c(rep(c('Category A','Category B') ,30))
+# Example
+# cat = c(rep(c('Category A','Category B','Category C') ,20))
 # values= c(2,100,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,3,3,3,3,3,3,3,3,3,3,1,1,1,1,1,1,1,1,1,
-#           1,4,4,4,4,4,4,4,4,4,4,2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5)
+#           1,4,4,4,4,4,4,4,4,4,4,2.5,2.5,2.5,2.5,2.5,8,2.5,7,2.5,2.5)
 # 
 # x = data.frame(cat,values)
 # CellMeans(x,'values','cat', p=0.85)
